@@ -21,13 +21,23 @@ public class NewsServiceImpl implements NewsService {
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate = new RestTemplate();
 
+    private final String urlP = "499c87ca51cf4652b3d38bb974409fd7";
+    private final String urlTr = "0c7b56c2d695429fa11f806b2d5ebc41";
+
+
     @Override
     @SneakyThrows
     public List<NewsResponse> fetchAllBusinessNewsForPoland() {
-        String url = "https://newsapi.org/v2/top-headlines?q=business&country=pl&apiKey=499c87ca51cf4652b3d38bb974409fd7";
+        String url = "https://newsapi.org/v2/top-headlines?q=business&country=pl&apiKey=" + urlTr;
 
         JsonNode jsonNode = Objects.requireNonNull(restTemplate.getForObject(url, JsonNode.class)).get("articles");
-        List<NewsResponse> newsResponses = objectMapper.readValue(jsonNode.toString(), new TypeReference<List<NewsResponse>>() {});
+
+        List<NewsResponse> newsResponses = objectMapper
+                .readValue(
+                        jsonNode.toString(),
+                        new TypeReference<List<NewsResponse>>() {
+                        }
+                );
 
         newsRepository.save(newsResponses);
         return newsResponses;
